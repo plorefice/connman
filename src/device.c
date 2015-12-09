@@ -37,6 +37,7 @@
 static GSList *device_list = NULL;
 static gchar **device_filter = NULL;
 static gchar **nodevice_filter = NULL;
+static gchar **nocleanup_filter = NULL;
 
 enum connman_pending_type {
 	PENDING_NONE	= 0,
@@ -1367,6 +1368,23 @@ list:
 	return false;
 }
 
+bool __connman_device_nocleanup(const char *devname)
+{
+	char **pattern;
+
+	if (!nocleanup_filter)
+		return false;
+
+	for (pattern = nocleanup_filter; *pattern; pattern++) {
+		if (g_pattern_match_simple(*pattern, devname)) {
+			DBG("not cleaning up %s", devname);
+			return true;
+		}
+	}
+
+	return false;
+}
+
 static void cleanup_devices(void)
 {
 	/*
@@ -1396,6 +1414,10 @@ static void cleanup_devices(void)
 		struct sockaddr_in sin_addr, sin_mask;
 
 		filtered = __connman_device_isfiltered(interfaces[i]);
+		if (filtered)
+			continue;
+
+		filtered = __connman_device_nocleanup(interfaces[i]);
 		if (filtered)
 			continue;
 
@@ -1435,7 +1457,8 @@ static void cleanup_devices(void)
 	g_strfreev(interfaces);
 }
 
-int __connman_device_init(const char *device, const char *nodevice)
+int __connman_device_init(const char *device, const char *nodevice,
+						const char *nocleanup)
 {
 	DBG("");
 
@@ -1444,6 +1467,9 @@ int __connman_device_init(const char *device, const char *nodevice)
 
 	if (nodevice)
 		nodevice_filter = g_strsplit(nodevice, ",", -1);
+
+	if (nocleanup)
+		nocleanup_filter = g_strsplit(nocleanup, ",", -1);
 
 	cleanup_devices();
 
@@ -1456,4 +1482,5 @@ void __connman_device_cleanup(void)
 
 	g_strfreev(nodevice_filter);
 	g_strfreev(device_filter);
+	g_strfreev(nocleanup_filter);
 }

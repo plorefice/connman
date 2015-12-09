@@ -466,6 +466,7 @@ static gchar *option_plugin = NULL;
 static gchar *option_nodevice = NULL;
 static gchar *option_noplugin = NULL;
 static gchar *option_wifi = NULL;
+static gchar *option_nfs = NULL;
 static gboolean option_detach = TRUE;
 static gboolean option_dnsproxy = TRUE;
 static gboolean option_backtrace = TRUE;
@@ -493,6 +494,8 @@ static GOptionEntry options[] = {
 			"Specify networking device or interface", "DEV" },
 	{ "nodevice", 'I', 0, G_OPTION_ARG_STRING, &option_nodevice,
 			"Specify networking interface to ignore", "DEV" },
+	{ "nfs", 'N', 0, G_OPTION_ARG_STRING, &option_nfs,
+			"Specify networking interface for NFS boot", "DEV" },
 	{ "plugin", 'p', 0, G_OPTION_ARG_STRING, &option_plugin,
 				"Specify plugins to load", "NAME,..." },
 	{ "noplugin", 'P', 0, G_OPTION_ARG_STRING, &option_noplugin,
@@ -664,7 +667,7 @@ int main(int argc, char *argv[])
 	__connman_provider_init();
 	__connman_network_init();
 	__connman_config_init();
-	__connman_device_init(option_device, option_nodevice);
+	__connman_device_init(option_device, option_nodevice, option_nfs);
 
 	__connman_ippool_init();
 	__connman_iptables_init();
@@ -699,6 +702,7 @@ int main(int argc, char *argv[])
 	g_free(option_config);
 	g_free(option_device);
 	g_free(option_plugin);
+	g_free(option_nfs);
 	g_free(option_nodevice);
 	g_free(option_noplugin);
 

@@ -544,7 +544,7 @@ void __connman_technology_notify_regdom_by_device(struct connman_device *device,
 
 #include <connman/device.h>
 
-int __connman_device_init(const char *device, const char *nodevice);
+int __connman_device_init(const char *device, const char *nodevice, const char *nocleanup);
 void __connman_device_cleanup(void);
 
 void __connman_device_list(DBusMessageIter *iter, void *user_data);
@@ -558,6 +558,7 @@ int __connman_device_request_hidden_scan(struct connman_device *device,
 				const char *security, void *user_data);
 
 bool __connman_device_isfiltered(const char *devname);
+bool __connman_device_nocleanup(const char *devname);
 
 void __connman_device_set_network(struct connman_device *device,
 					struct connman_network *network);
