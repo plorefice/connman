@@ -511,9 +511,20 @@ static int service_load(struct connman_service *service)
 		service->passphrase = str;
 	}
 
-	if (service->ipconfig_ipv4)
+	if (service->ipconfig_ipv4) {
+		struct connman_device * device;
+
 		__connman_ipconfig_load(service->ipconfig_ipv4, keyfile,
 					service->identifier, "IPv4.");
+
+		device = connman_network_get_device(service->network);
+
+		if (connman_nfs_get_enabled() && device == connman_nfs_get_device())
+		{
+			connman_nfs_set_service(service);
+			connman_nfs_configure_service();
+		}
+	}
 
 	if (service->ipconfig_ipv6)
 		__connman_ipconfig_load(service->ipconfig_ipv6, keyfile,
@@ -586,6 +597,11 @@ static int service_save(struct connman_service *service)
 	int err = 0;
 
 	DBG("service %p new %d", service, service->new_service);
+
+	if (connman_nfs_get_enabled() && service == connman_nfs_get_service()) {
+		DBG("skipping save of nfs service");
+		return 0;
+	}
 
 	if (service->new_service)
 		return -ESRCH;

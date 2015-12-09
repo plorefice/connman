@@ -1307,6 +1307,11 @@ struct connman_device *connman_device_create_from_index(int index)
 
 	connman_device_set_string(device, "Address", addr);
 
+	if (connman_nfs_get_enabled()) {
+		if (g_strcmp0(connman_nfs_get_interface(), devname) == 0)
+			connman_nfs_set_device(device);
+	}
+
 done:
 	g_free(devname);
 	g_free(name);
