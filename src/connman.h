@@ -1042,3 +1042,8 @@ void __connman_machine_cleanup(void);
 int __connman_util_get_random(uint64_t *val);
 int __connman_util_init(void);
 void __connman_util_cleanup(void);
+
+#include <connman/nfs.h>
+
+int __connman_nfs_init(const char *devname);
+void __connman_nfs_cleanup(void);

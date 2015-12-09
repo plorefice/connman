@@ -698,6 +698,7 @@ int main(int argc, char *argv[])
 	__connman_wispr_init();
 	__connman_rfkill_init();
 	__connman_machine_init();
+	__connman_nfs_init(option_nfs);
 
 	g_free(option_config);
 	g_free(option_device);
@@ -710,6 +711,7 @@ int main(int argc, char *argv[])
 
 	g_source_remove(signal);
 
+	__connman_nfs_cleanup();
 	__connman_machine_cleanup();
 	__connman_rfkill_cleanup();
 	__connman_wispr_cleanup();
