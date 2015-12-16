@@ -1422,7 +1422,8 @@ static void cleanup_devices(void)
 		if (filtered)
 			continue;
 
-		filtered = __connman_device_nocleanup(interfaces[i]);
+		filtered = connman_nfs_get_enabled() &&
+					__connman_device_nocleanup(interfaces[i]);
 		if (filtered)
 			continue;
 

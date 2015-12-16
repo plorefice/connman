@@ -667,6 +667,7 @@ int main(int argc, char *argv[])
 	__connman_provider_init();
 	__connman_network_init();
 	__connman_config_init();
+	__connman_nfs_init(option_nfs);
 	__connman_device_init(option_device, option_nodevice, option_nfs);
 
 	__connman_ippool_init();
@@ -698,7 +699,6 @@ int main(int argc, char *argv[])
 	__connman_wispr_init();
 	__connman_rfkill_init();
 	__connman_machine_init();
-	__connman_nfs_init(option_nfs);
 
 	g_free(option_config);
 	g_free(option_device);
